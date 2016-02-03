@@ -12,6 +12,24 @@
         <item name="android:textColor">@color/mcv_text_date_light</item>
     </style>
 
+    <style name="TextAppearance.MaterialCalendarWidget.DateOutOfMonth"
+           parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/mcv_text_date_out_of_month_light</item>
+    </style>
+
+    <style name="TextAppearance.MaterialCalendarWidget.DateDisabled"
+           parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/mcv_text_date_disabled_light</item>
+    </style>
+
+    <style name="TextAppearance.MaterialCalendarWidget.DateToday"
+           parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/mcv_text_date_today_light</item>
+    </style>
+
     <style name="TextAppearance.MaterialCalendarWidget.WeekDay"
         parent="android:TextAppearance.DeviceDefault.Small">
         <item name="android:textSize">12sp</item>

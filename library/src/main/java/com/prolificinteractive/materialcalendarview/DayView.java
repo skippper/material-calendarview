@@ -46,9 +46,13 @@ class DayView extends CheckedTextView {
 
     private boolean isInRange = true;
     private boolean isInMonth = true;
+    private boolean isToday = false;
     private boolean isDecoratedDisabled = false;
     @ShowOtherDates
     private int showOtherDates = MaterialCalendarView.SHOW_DEFAULTS;
+    private int outOfMonthTextAppearanceId = Integer.MIN_VALUE;
+    private int disabledTextAppearanceId = Integer.MIN_VALUE;
+    private int todayTextAppearanceId = Integer.MIN_VALUE;
 
     public DayView(Context context, CalendarDay day) {
         super(context);
@@ -129,41 +133,14 @@ class DayView extends CheckedTextView {
     public CalendarDay getDate() {
         return date;
     }
+    
+    protected void setupSelection(@ShowOtherDates int showOtherDates, boolean inRange, boolean inMonth, boolean isToday) {
 
-    private void setEnabled() {
-        boolean enabled = isInMonth && isInRange && !isDecoratedDisabled;
-        super.setEnabled(isInRange && !isDecoratedDisabled);
-
-        boolean showOtherMonths = showOtherMonths(showOtherDates);
-        boolean showOutOfRange = showOutOfRange(showOtherDates) || showOtherMonths;
-        boolean showDecoratedDisabled = showDecoratedDisabled(showOtherDates);
-
-        boolean shouldBeVisible = enabled;
-
-        if (!isInMonth && showOtherMonths) {
-            shouldBeVisible = true;
-        }
-
-        if (!isInRange && showOutOfRange) {
-            shouldBeVisible |= isInMonth;
-        }
-
-        if (isDecoratedDisabled && showDecoratedDisabled) {
-            shouldBeVisible |= isInMonth && isInRange;
-        }
-
-        if (!isInMonth && shouldBeVisible) {
-            setTextColor(getTextColors().getColorForState(
-                    new int[]{-android.R.attr.state_enabled}, Color.GRAY));
-        }
-        setVisibility(shouldBeVisible ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    protected void setupSelection(@ShowOtherDates int showOtherDates, boolean inRange, boolean inMonth) {
         this.showOtherDates = showOtherDates;
         this.isInMonth = inMonth;
         this.isInRange = inRange;
-        setEnabled();
+        this.isToday = isToday;
+        setupViewState();
     }
 
     private final Rect tempRect = new Rect();
@@ -235,7 +212,7 @@ class DayView extends CheckedTextView {
      */
     void applyFacade(DayViewFacade facade) {
         this.isDecoratedDisabled = facade.areDaysDisabled();
-        setEnabled();
+        setupViewState();
 
         setCustomBackground(facade.getBackgroundDrawable());
         setSelectionDrawable(facade.getSelectionDrawable());
@@ -275,4 +252,68 @@ class DayView extends CheckedTextView {
             tempRect.set(0, offset, width, radius + offset);
         }
     }
+
+
+    private void setupViewState() {
+        super.setClickable(isInRange);
+        setupTextAppearance();
+        setVisibilityByProperties();
+    }
+
+    private void setupTextAppearance() {
+        if (!isInMonth) {
+            if (outOfMonthTextAppearanceId != Integer.MIN_VALUE){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    this.setTextAppearance(outOfMonthTextAppearanceId);
+                }else{
+                    this.setTextAppearance(getContext(),outOfMonthTextAppearanceId);
+                }
+            }
+        }
+
+        if (!isInRange) {
+            if (disabledTextAppearanceId != Integer.MIN_VALUE){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    this.setTextAppearance(disabledTextAppearanceId);
+                }else{
+                    this.setTextAppearance(getContext(), disabledTextAppearanceId);
+                }
+            }
+        }
+
+        if(isToday){
+            if(todayTextAppearanceId != Integer.MIN_VALUE){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    this.setTextAppearance(todayTextAppearanceId);
+                }else{
+                    this.setTextAppearance(getContext(), todayTextAppearanceId);
+                }
+            }
+        }
+    }
+
+    private void setVisibilityByProperties() {
+        final boolean showOtherMonths = showOtherMonths(showOtherDates);
+        final boolean showOutOfRange = showOutOfRange(showOtherDates);
+        final boolean showDecoratedDisabled = showDecoratedDisabled(showOtherDates);
+        if((showOtherMonths || isInMonth) && (showOutOfRange || isInRange) && (showDecoratedDisabled || isDecoratedDisabled)){
+            setVisibility(View.VISIBLE);
+        }else{
+            setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setOutOfMonthTextAppearance(final int taId) {
+        this.outOfMonthTextAppearanceId = taId;
+    }
+
+    public void setDisabledTextAppearanceId(final int taId) {
+        this.disabledTextAppearanceId = taId;
+    }
+
+    public void setTodayTextAppearance(final int taId) {
+        this.todayTextAppearanceId = taId;
+    }
+
+
 }

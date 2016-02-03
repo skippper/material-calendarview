@@ -29,6 +29,11 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
     private Integer color = null;
     private Integer dateTextAppearance = null;
     private Integer weekDayTextAppearance = null;
+    private Integer dateOutOfMonthTextAppearance = null;
+    private Integer dateDisabledTextAppearance = null;
+    private Integer dateTodayTextAppearance = null;
+
+
     @ShowOtherDates
     private int showOtherDates = MaterialCalendarView.SHOW_DEFAULTS;
     private CalendarDay minDate = null;
@@ -82,6 +87,7 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
         newAdapter.titleFormatter = titleFormatter;
         newAdapter.color = color;
         newAdapter.dateTextAppearance = dateTextAppearance;
+        newAdapter.dateOutOfMonthTextAppearance = dateOutOfMonthTextAppearance;
         newAdapter.weekDayTextAppearance = weekDayTextAppearance;
         newAdapter.showOtherDates = showOtherDates;
         newAdapter.minDate = minDate;
@@ -151,6 +157,16 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
         if (weekDayTextAppearance != null) {
             pagerView.setWeekDayTextAppearance(weekDayTextAppearance);
         }
+        if (dateOutOfMonthTextAppearance != null) {
+            pagerView.setDateOutOfMonthTextAppearance(dateOutOfMonthTextAppearance);
+        }
+        if (dateDisabledTextAppearance != null) {
+            pagerView.setDateDisabledTextAppearance(dateDisabledTextAppearance);
+        }
+        if (dateTodayTextAppearance != null) {
+            pagerView.setTodayTextAppearance(dateTodayTextAppearance);
+        }
+
         pagerView.setShowOtherDates(showOtherDates);
         pagerView.setMinimumDate(minDate);
         pagerView.setMaximumDate(maxDate);
@@ -201,6 +217,36 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
         this.dateTextAppearance = taId;
         for (V pagerView : currentViews) {
             pagerView.setDateTextAppearance(taId);
+        }
+    }
+
+    public void setDateOutOfMonthTextAppearance(final int resId) {
+        if (resId == 0) {
+            return;
+        }
+        this.dateOutOfMonthTextAppearance = resId;
+        for (V pagerView : currentViews) {
+            pagerView.setDateTextAppearance(resId);
+        }
+    }
+
+    public void setDateDisabledTextAppearance(final int resId) {
+        if (resId == 0) {
+            return;
+        }
+        this.dateDisabledTextAppearance = resId;
+        for (V pagerView : currentViews) {
+            pagerView.setDateDisabledTextAppearance(resId);
+        }
+    }
+
+    public void setDateTodayTextAppearance(final int resId) {
+        if (resId == 0) {
+            return;
+        }
+        this.dateTodayTextAppearance = resId;
+        for (V pagerView : currentViews) {
+            pagerView.setTodayTextAppearance(resId);
         }
     }
 
@@ -320,4 +366,14 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
     protected int getWeekDayTextAppearance() {
         return weekDayTextAppearance == null ? 0 : weekDayTextAppearance;
     }
+    protected int getDateOutOfMonthTextAppearance() {
+        return dateOutOfMonthTextAppearance == null ? 0 : dateOutOfMonthTextAppearance;
+    }
+
+    protected int getDateDisabledTextAppearance() {
+        return dateDisabledTextAppearance == null ? 0 : dateDisabledTextAppearance;
+    }
+
+
+
 }

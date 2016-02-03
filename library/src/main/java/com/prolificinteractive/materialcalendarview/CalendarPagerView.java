@@ -116,6 +116,24 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         }
     }
 
+    public void setDateOutOfMonthTextAppearance(int taId) {
+        for (DayView dayView : dayViews) {
+            dayView.setOutOfMonthTextAppearance(taId);
+        }
+    }
+
+    public void setDateDisabledTextAppearance(final int taId) {
+        for (DayView dayView : dayViews) {
+            dayView.setDisabledTextAppearanceId(taId);
+        }
+    }
+
+    public void setTodayTextAppearance(final int taId) {
+        for (DayView dayView : dayViews) {
+            dayView.setTodayTextAppearance(taId);
+        }
+    }
+
     public void setShowOtherDates(@ShowOtherDates int showFlags) {
         this.showOtherDates = showFlags;
         updateUi();
@@ -168,7 +186,7 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         for (DayView dayView : dayViews) {
             CalendarDay day = dayView.getDate();
             dayView.setupSelection(
-                    showOtherDates, day.isInRange(minDate, maxDate), isDayEnabled(day));
+                    showOtherDates, day.isInRange(minDate, maxDate), isDayEnabled(day), day.isToday());
         }
         postInvalidate();
     }
@@ -326,6 +344,9 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     protected CalendarDay getFirstViewDay() {
         return firstViewDay;
     }
+
+
+
 
     /**
      * Simple layout params class for MonthView, since every child is the same size

@@ -351,6 +351,18 @@ public class MaterialCalendarView extends ViewGroup {
                     R.styleable.MaterialCalendarView_mcv_dateTextAppearance,
                     R.style.TextAppearance_MaterialCalendarWidget_Date
             ));
+            setDateOutOfMonthTextAppearance(a.getResourceId(
+                    R.styleable.MaterialCalendarView_mcv_dateOutOfMonthTextAppearance,
+                    R.style.TextAppearance_MaterialCalendarWidget_DateOutOfMonth
+            ));
+            setDateDisabledTextAppearance(a.getResourceId(
+                    R.styleable.MaterialCalendarView_mcv_dateDisabledTextAppearance,
+                    R.style.TextAppearance_MaterialCalendarWidget_DateDisabled
+            ));
+            setDateTodayTextAppearance(a.getResourceId(
+                    R.styleable.MaterialCalendarView_mcv_dateTodayTextAppearance,
+                    R.style.TextAppearance_MaterialCalendarWidget_DateToday
+            ));
             //noinspection ResourceType
             setShowOtherDates(a.getInteger(
                     R.styleable.MaterialCalendarView_mcv_showOtherDates,
@@ -740,6 +752,27 @@ public class MaterialCalendarView extends ViewGroup {
     }
 
     /**
+     * @param resourceId The out of month text appearance resource id.
+     */
+    public void setDateOutOfMonthTextAppearance(int resourceId) {
+        adapter.setDateOutOfMonthTextAppearance(resourceId);
+    }
+
+    /**
+     * @param resourceId The disabled text appearance resource id.
+     */
+    public void setDateDisabledTextAppearance(int resourceId) {
+        adapter.setDateDisabledTextAppearance(resourceId);
+    }
+
+    /**
+     * @param resourceId The disabled text appearance resource id.
+     */
+    public void setDateTodayTextAppearance(int resourceId) {
+        adapter.setDateTodayTextAppearance(resourceId);
+    }
+
+    /**
      * @param resourceId The text appearance resource id.
      */
     public void setWeekDayTextAppearance(int resourceId) {
@@ -1037,7 +1070,10 @@ public class MaterialCalendarView extends ViewGroup {
         SavedState ss = new SavedState(super.onSaveInstanceState());
         ss.color = getSelectionColor();
         ss.dateTextAppearance = adapter.getDateTextAppearance();
+        ss.disabledDateTextAppearance = adapter.getDateDisabledTextAppearance();
+        ss.outOfMonthDateTextAppearance = adapter.getDateOutOfMonthTextAppearance();
         ss.weekDayTextAppearance = adapter.getWeekDayTextAppearance();
+
         ss.showOtherDates = getShowOtherDates();
         ss.allowClickDaysOutsideCurrentMonth = allowClickDaysOutsideCurrentMonth();
         ss.minDate = getMinimumDate();
@@ -1067,6 +1103,8 @@ public class MaterialCalendarView extends ViewGroup {
         setSelectionColor(ss.color);
         setDateTextAppearance(ss.dateTextAppearance);
         setWeekDayTextAppearance(ss.weekDayTextAppearance);
+        setDateOutOfMonthTextAppearance(ss.outOfMonthDateTextAppearance);
+        setDateDisabledTextAppearance(ss.disabledDateTextAppearance);
         setShowOtherDates(ss.showOtherDates);
         setAllowClickDaysOutsideCurrentMonth(ss.allowClickDaysOutsideCurrentMonth);
         clearSelection();
@@ -1108,6 +1146,10 @@ public class MaterialCalendarView extends ViewGroup {
         int color = 0;
         int dateTextAppearance = 0;
         int weekDayTextAppearance = 0;
+        int outOfMonthDateTextAppearance = 0;
+        int disabledDateTextAppearance = 0;
+
+
         int showOtherDates = SHOW_DEFAULTS;
         boolean allowClickDaysOutsideCurrentMonth = true;
         CalendarDay minDate = null;
@@ -1132,6 +1174,8 @@ public class MaterialCalendarView extends ViewGroup {
             out.writeInt(color);
             out.writeInt(dateTextAppearance);
             out.writeInt(weekDayTextAppearance);
+            out.writeInt(outOfMonthDateTextAppearance);
+            out.writeInt(disabledDateTextAppearance);
             out.writeInt(showOtherDates);
             out.writeByte((byte) (allowClickDaysOutsideCurrentMonth ? 1 : 0));
             out.writeParcelable(minDate, 0);
@@ -1163,6 +1207,8 @@ public class MaterialCalendarView extends ViewGroup {
             color = in.readInt();
             dateTextAppearance = in.readInt();
             weekDayTextAppearance = in.readInt();
+            outOfMonthDateTextAppearance = in.readInt();
+            disabledDateTextAppearance = in.readInt();
             showOtherDates = in.readInt();
             allowClickDaysOutsideCurrentMonth = in.readByte() != 0;
             ClassLoader loader = CalendarDay.class.getClassLoader();

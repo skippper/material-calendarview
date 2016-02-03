@@ -299,4 +299,9 @@ public final class CalendarDay implements Parcelable {
             return new CalendarDay[size];
         }
     };
+
+    public boolean isToday() {
+        final CalendarDay today = today();
+        return today.getYear() == this.getYear() && today.getMonth() == this.getMonth() && today.getDay() == this.getDay();
+    }
 }
