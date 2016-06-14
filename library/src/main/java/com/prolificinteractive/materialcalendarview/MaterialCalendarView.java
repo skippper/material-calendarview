@@ -210,6 +210,8 @@ public class MaterialCalendarView extends ViewGroup {
     private OnDateSelectedListener listener;
     private OnMonthChangedListener monthListener;
     private OnRangeSelectedListener rangeListener;
+    private DragListener dragListener;
+    private DateLongClickListener longClickListener;
 
 
     CharSequence calendarContentDescription;
@@ -1358,6 +1360,61 @@ public class MaterialCalendarView extends ViewGroup {
      */
     public void setOnRangeSelectedListener(OnRangeSelectedListener listener) {
         this.rangeListener = listener;
+    }
+
+    /**
+     * Sets the listener to be notified upon a drag and drop event.
+     *
+     * @param listener thing to be notified
+     */
+    public void setDragListener(DragListener listener) {
+        this.dragListener = listener;
+    }
+
+    public void setDateLongClickListener(DateLongClickListener listener){
+        this.longClickListener = listener;
+    }
+
+    protected void dispatchOnDragEntered(final CalendarDay dayView){
+        final DragListener l = dragListener;
+        if(l != null){
+            l.onDragEntered(dayView);
+        }
+    }
+
+    protected void dispatchOnDragExited(final CalendarDay dayView){
+        final DragListener l = dragListener;
+        if(l != null){
+            l.onDragExited(dayView);
+        }
+    }
+
+    protected void dispatchOnDragStarted(final CalendarDay dayView){
+        final DragListener l = dragListener;
+        if(l != null){
+            l.onDragStarted(dayView);
+        }
+    }
+
+    protected void dispatchOnDragDropped(final CalendarDay dayView){
+        final DragListener l = dragListener;
+        if(l != null){
+            l.onDragDropped(dayView);
+        }
+    }
+
+    protected void dispatchOnDragEnded(final CalendarDay dayView) {
+        final DragListener l = dragListener;
+        if(l != null){
+            l.onDragEnded(dayView);
+        }
+    }
+
+    protected void dispatchOnDateLongClick(@NonNull CalendarDay date, final View v){
+        DateLongClickListener l = longClickListener;
+        if (l != null) {
+            l.onDateLongClicked(date,v);
+        }
     }
 
     /**

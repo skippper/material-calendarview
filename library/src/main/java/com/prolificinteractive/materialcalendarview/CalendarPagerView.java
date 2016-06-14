@@ -2,6 +2,7 @@ package com.prolificinteractive.materialcalendarview;
 
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -19,7 +20,6 @@ import java.util.List;
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.SHOW_DEFAULTS;
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.showOtherMonths;
 import static java.util.Calendar.DATE;
-import static java.util.Calendar.DAY_OF_WEEK;
 
 abstract class CalendarPagerView extends ViewGroup implements View.OnClickListener {
 
@@ -64,13 +64,54 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     }
 
     protected void addDayView(Collection<DayView> dayViews, Calendar calendar) {
-        CalendarDay day = CalendarDay.from(calendar);
-        DayView dayView = new DayView(getContext(), day);
+        final CalendarDay day = CalendarDay.from(calendar);
+        final DayView dayView = new DayView(getContext(), day);
         dayView.setOnClickListener(this);
         dayViews.add(dayView);
         addView(dayView, new LayoutParams());
+        setupDragAndDrop(dayView);
 
         calendar.add(DATE, 1);
+    }
+
+    private void setupDragAndDrop(final DayView dayView) {
+        dayView.setOnDragListener(new OnDragListener() {
+            @Override
+            public boolean onDrag(final View v, final DragEvent event) {
+                switch (event.getAction()){
+                    case DragEvent.ACTION_DROP:
+                        mcv.dispatchOnDragDropped(dayView.getDate());
+                        break;
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        mcv.dispatchOnDragEnded(dayView.getDate());
+                        break;
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        mcv.dispatchOnDragEntered(dayView.getDate());
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        mcv.dispatchOnDragExited(dayView.getDate());
+                        break;
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        break;
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        if(dayView.isEnabled()){
+                            mcv.dispatchOnDragStarted(dayView.getDate());
+                        }else{
+                            return false;
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+
+        dayView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                mcv.dispatchOnDateLongClick(dayView.getDate(), v);
+                return false;
+            }
+        });
     }
 
     protected Calendar resetAndGetWorkingCalendar() {

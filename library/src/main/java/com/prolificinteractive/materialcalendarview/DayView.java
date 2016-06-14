@@ -293,6 +293,7 @@ class DayView extends CheckedTextView {
     }
 
     private void setVisibilityByProperties() {
+        super.setEnabled(isInRange && !isDecoratedDisabled);
         final boolean showOtherMonths = showOtherMonths(showOtherDates);
         final boolean showOutOfRange = showOutOfRange(showOtherDates);
         final boolean showDecoratedDisabled = showDecoratedDisabled(showOtherDates);
